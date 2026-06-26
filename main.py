@@ -108,3 +108,27 @@ def map_support_pdf_fields(raw: Dict[str, str]) -> Dict[str, Any]:
             sessions.append(session)
 
     return {"client": client, "weekly": weekly, "sessions": sessions}
+
+
+@app.post("/list-fields")
+async def list_fields(file: UploadFile = File(...)):
+    pdf_bytes = await file.read()
+    reader = PdfReader(io.BytesIO(pdf_bytes))
+
+    fields = reader.get_fields()
+
+    if not fields:
+        return {"fields": []}
+
+    result = []
+
+    for name, field in fields.items():
+        result.append({
+            "name": name,
+            "value": str(field.get("/V", "")),
+            "type": str(field.get("/FT", "")),
+        })
+
+    return {"fields": result}
+
+
