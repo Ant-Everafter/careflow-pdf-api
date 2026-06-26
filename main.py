@@ -667,7 +667,6 @@ def apply_field_updates(reader: PdfReader, field_updates: Dict[str, str]) -> byt
             page,
             page_updates,
             auto_regenerate=True,
-            flatten=False,
         )
 
     output = io.BytesIO()
